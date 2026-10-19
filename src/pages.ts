@@ -31,7 +31,7 @@ export function tipPage(jar: Jar, mock: boolean, error?: string, prev: { name?: 
 <div class="goal mini"><p>${esc(g.emoji)} ${esc(g.label)} <b>${g.percent}%</b></p><div class="bar"><i class="fill p${Math.round(g.percent / 5) * 5}"></i></div></div>
 ${error ? `<p class="err" role="alert">${esc(error)}</p>` : ""}
 <form method="post" action="/t/${esc(s.id)}/tip" class="stack" id="tipform">
-<div class="amounts">${s.presets.map((p, i) => `<label class="amt"><input type="radio" name="amount" value="${p}"${i === 1 ? " checked" : ""}><span>${esc(money(p, s.currency))}</span></label>`).join("")}<label class="amt"><input type="radio" name="amount" value="custom"><span>✏️</span></label></div>
+<div class="amounts" role="radiogroup" aria-label="tip amount">${s.presets.map((p, i) => `<label class="amt"><input type="radio" name="amount" value="${p}"${i === 1 ? " checked" : ""} aria-label="${esc(money(p, s.currency))}"><span>${esc(money(p, s.currency))}</span></label>`).join("")}<label class="amt"><input type="radio" name="amount" value="custom" aria-label="custom amount"><span>✏️</span></label></div>
 <div class="custom" id="custom" hidden><input type="number" name="customAmount" id="customAmount" min="${toMajor(s.min, s.currency)}" max="${toMajor(s.max, s.currency)}" step="0.01" placeholder="${esc(toMajor(s.min, s.currency))}–${esc(toMajor(s.max, s.currency))}" aria-label="custom amount"><span>${esc(s.currency)}</span></div>
 <p class="tierhint" id="tierhint">🔔 small alert</p>
 <input name="name" maxlength="${s.nameMax}" placeholder="your name on stream" aria-label="display name" autocomplete="nickname" value="${esc(prev.name ?? "")}">

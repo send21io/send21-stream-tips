@@ -27,6 +27,9 @@ describe("tip page", () => {
     expect(bad.status).toBe(400);
     expect(await bad.text()).toContain("keep_me");
     expect((await w.post("/t/pixelfox/tip", { amount: "500" }, { origin: "https://evil.example" })).status).toBe(403);
+    // Opaque Origin: null with same-origin Sec-Fetch-Site (Playwright / some browsers) must still tip.
+    const opaque = await w.post("/t/pixelfox/tip", { amount: "500", name: "bot" }, { origin: "null", "sec-fetch-site": "same-origin" });
+    expect(opaque.status).toBe(303);
   });
   it("escapes the viewer's name and message everywhere", async () => {
     w = await world();

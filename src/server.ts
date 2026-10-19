@@ -120,8 +120,11 @@ export function createApp(deps: AppDeps): Express {
   const sameSite = (req: Request) => {
     const site = req.get("sec-fetch-site");
     if (site && site !== "same-origin" && site !== "none") return false;
+    // Treat a missing Origin, or the opaque "null" string, as OK: Sec-Fetch-Site already
+    // blocks cross-site. Some browsers (and Playwright) send Origin: null on same-origin POSTs.
     const origin = req.get("origin");
-    return !origin || origin === new URL(publicUrl).origin || origin === `${req.protocol}://${req.get("host")}`;
+    if (!origin || origin === "null") return true;
+    return origin === new URL(publicUrl).origin || origin === `${req.protocol}://${req.get("host")}`;
   };
 
   // ---------- viewers ----------
