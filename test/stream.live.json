@@ -1,0 +1,13 @@
+{
+  "id": "pixelfox",
+  "name": "PixelFox",
+  "emoji": "🦊",
+  "currency": "EUR",
+  "presets": [2, 5, 10, 25],
+  "min": 1,
+  "max": 500,
+  "tiers": { "medium": 10, "big": 50 },
+  "goal": { "label": "new mic", "emoji": "🎤", "target": 200 },
+  "nameMax": 24,
+  "messageMax": 140
+}
