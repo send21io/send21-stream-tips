@@ -29,6 +29,7 @@
    - the key and `PUBLIC_URL`
    - your own receiving addresses (`PAY_LIGHTNING`, `PAY_OPTIONS`)
    - `STREAMER_TOKEN` (dashboard login) and `OVERLAY_KEY` (the secret in the overlay URL), two different random values
+   - 🔐 **Approve your receiving addresses in send21.** New send21 accounts (created on or after 20 Oct 2026) only accept receiving addresses the owner approved, including Lightning addresses. Add them in the send21 app, or propose one from an agent (MCP `propose_receiving_address`), then sign in and approve it with a passkey or authenticator code. No API key can approve an address. Older accounts can opt in under Settings.
 4. **Webhook.** Put the server behind your own HTTPS address, for example a reverse proxy with a free Let's Encrypt certificate and `TRUST_PROXY=1`. Then run `npm run webhook:register` and paste the printed `SEND21_WEBHOOK_SECRET` into `.env`.
 5. **You.** Run `cp stream.example.json stream.json` and set your id, name, emoji, currency, amount chips, min and max, tier limits (`tiers.medium`, `tiers.big`) and the starting goal. Then `npm run build && npm start`.
 6. **OBS.** Add a **Browser** source with the overlay URL from the dashboard, 1920×1080. Tick "Control audio via OBS" if you want the sound on its own fader. Options: `?top=1` shows top tippers, `?goal=0` hides the goal, `?sound=0` mutes.
@@ -86,6 +87,10 @@ A payment that arrives after ⌛ or ↩️ is still paid (marked *late*), and it
 **⚡ Lightning.** send21 fetches an invoice from your Lightning address. It confirms the payment when your wallet provider supports **LUD-21**. Without LUD-21 the money still reaches you, but no alert plays on its own. See [Lightning](https://send21.io/docs/lightning).
 
 **Fees.** One small send21 fee per paid tip (0.49% on small payments, at least $0.01), never taken from the payment. See [pricing](https://send21.io/pricing). On €1 tips the minimum fee is a bigger share, so pick your `min` with that in mind.
+
+## Troubleshooting
+
+- **422 `address_not_approved`:** a receiving address isn't approved in your send21 account, so nothing was created. Sign in to send21, approve the address (passkey or authenticator code), then try again.
 
 ## Security notes
 
