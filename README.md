@@ -95,9 +95,10 @@ A payment that arrives after ⌛ or ↩️ is still paid (marked *late*), and it
 ## Security notes
 
 - **Signature V2 only.** Every delivery is checked with `X-Send21-Signature-V2`: an HMAC-SHA256 over `<t>.<delivery id>.<raw body>`, compared in constant time. Deliveries more than **300 s** old or dated in the future are refused. A bad signature gets `401` and nothing is stored.
-- **Dedupe on both sides.**
-  - send21 dedupes on its side: retries reuse the same `X-Send21-Delivery` id, and the `Idempotency-Key` makes one tip one link.
-  - The receiver must still run its own duplicate check, and this one does. A delivery id, or the same body under a new id (sha256), is applied once, and a tip that is already paid never queues a second alert.
+- **The receiver dedupes deliveries.**
+  - send21 does not dedupe deliveries. Retries reuse the same `X-Send21-Delivery` id, and the receiver ignores deliveries it already handled.
+  - Separately, the `Idempotency-Key` makes one tip one link.
+  - This receiver's check: a delivery id, or the same body under a new id (sha256), is applied once, and a tip that is already paid never queues a second alert.
   - The delivery record, the tip and its alert are written in one step before the `2xx`, so a restart cannot alert twice. A failed write answers `500`, so send21 retries.
 - **Exact match or no alert.** A `draft.confirmed` must match the stored tip:
   - `orderId` `tip-<id>` and the pay link id
